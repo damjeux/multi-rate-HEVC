@@ -140,6 +140,9 @@ public:
   Void  create      ();
   Void  destroy     ();
 
+  // DS
+  UInt getTotalCoded() { return m_totalCoded; }
+
   Void  init        ( TEncTop* pcTEncTop );
   Void  compressGOP ( Int iPOCLast, Int iNumPicRcvd, TComList<TComPic*>& rcListPic, TComList<TComPicYuv*>& rcListPicYuvRec,
                       std::list<AccessUnit>& accessUnitsInGOP, Bool isField, Bool isTff, const InputColourSpaceConversion snr_conversion, const Bool printFrameMSE );

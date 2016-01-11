@@ -78,6 +78,9 @@ private:
   TComYuv**               m_ppcRecoYuvTemp; ///< Temporary Reconstruction Yuv for each depth
   TComYuv**               m_ppcOrigYuv;     ///< Original Yuv for each depth
 
+  //DS: array of "best" depth
+  UChar*        m_puhBestDepth;
+
   //  Data : encoder control
   Bool                    m_bEncodeDQP;
   Bool                    m_bFastDeltaQP;
@@ -117,6 +120,10 @@ public:
   Int   updateCtuDataISlice ( TComDataCU* pCtu, Int width, Int height );
 
   Void setFastDeltaQp       ( Bool b)                 { m_bFastDeltaQP = b;         }
+
+  //DS
+  UChar*        getBestDepth() { return m_puhBestDepth; }
+  UChar         getBestDepth(UInt uiIdx) const { return m_puhBestDepth[uiIdx]; }
 
 protected:
   Void  finishCU            ( TComDataCU*  pcCU, UInt uiAbsPartIdx );

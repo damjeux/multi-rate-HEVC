@@ -62,6 +62,13 @@ class TEncSlice
   : public WeightPredAnalysis
 {
 private:
+
+	// DS
+	// external file for writing or reading analysis data
+	FILE*					m_dataFile;
+	// number of CTUs in one frame
+	int					m_numCTUs;
+
   // encoder configuration
   TEncCfg*                m_pcCfg;                              ///< encoder configuration class
 

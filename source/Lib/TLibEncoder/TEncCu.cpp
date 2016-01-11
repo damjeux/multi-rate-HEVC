@@ -75,6 +75,9 @@ Void TEncCu::create(UChar uhTotalDepth, UInt uiMaxWidth, UInt uiMaxHeight, Chrom
   m_ppcRecoYuvTemp = new TComYuv*[m_uhTotalDepth-1];
   m_ppcOrigYuv     = new TComYuv*[m_uhTotalDepth-1];
 
+  // DS
+  m_puhBestDepth = (UChar*)xMalloc(UChar, 256); //be careful with the 256 here (only for 64x64 CTU...). TODO
+
   UInt uiNumPartitions;
   for( i=0 ; i<m_uhTotalDepth-1 ; i++)
   {
@@ -199,6 +202,10 @@ Void TEncCu::destroy()
     delete [] m_ppcOrigYuv;
     m_ppcOrigYuv = NULL;
   }
+
+  // DS
+  xFree(m_puhBestDepth);
+  m_puhBestDepth = NULL;
 }
 
 /** \param    pcEncTop      pointer of encoder class
@@ -725,7 +732,17 @@ Void TEncCu::xCompressCU( TComDataCU*& rpcBestCU, TComDataCU*& rpcTempCU, const 
     iMaxQP = iMinQP; // If all TUs are forced into using transquant bypass, do not loop here.
   }
 
-  const Bool bSubBranch = bBoundary || !( m_pcEncCfg->getUseEarlyCU() && rpcBestCU->getTotalCost()!=MAX_DOUBLE && rpcBestCU->isSkipped(0) );
+  // DS
+  Bool bSubBranch = bBoundary || !( m_pcEncCfg->getUseEarlyCU() && rpcBestCU->getTotalCost()!=MAX_DOUBLE && rpcBestCU->isSkipped(0) );
+
+#ifdef MULTI_RATE_LOAD_MODE
+  // set bSubBranch depending on loaded best depth
+  UInt bestDepth = m_puhBestDepth[rpcBestCU->getZorderIdxInCtu()];
+  if (bestDepth <= uiDepth)
+  {
+	  bSubBranch = false;
+  }
+#endif
 
   if( bSubBranch && uiDepth < sps.getLog2DiffMaxMinCodingBlockSize() && (!getFastDeltaQp() || uiWidth > fastDeltaQPCuMaxSize || bBoundary))
   {

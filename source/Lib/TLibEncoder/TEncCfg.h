@@ -453,6 +453,11 @@ public:
   Void      setMaxTempLayer                 ( Int maxTempLayer )            { m_maxTempLayer = maxTempLayer;      }
   Void      setMaxCUWidth                   ( UInt  u )      { m_maxCUWidth  = u; }
   Void      setMaxCUHeight                  ( UInt  u )      { m_maxCUHeight = u; }
+
+  //DS
+  UInt      getMaxCUWidth() { return m_maxCUWidth; }
+  UInt      getMaxCUHeight() { return m_maxCUHeight; }
+
   Void      setMaxTotalCUDepth              ( UInt  u )      { m_maxTotalCUDepth = u; }
   Void      setLog2DiffMaxMinCodingBlockSize( UInt  u )      { m_log2DiffMaxMinCodingBlockSize = u; }
 
