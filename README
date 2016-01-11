@@ -1,3 +1,24 @@
+This software implements the CU structure reuse method proposed in the paper: D. Schroeder, P. Rehm, and E. Steinbach, "Block structure reuse for multi-rate High Efficiency Video Coding", Proc. IEEE International Conference on Image Processing (ICIP), Sep. 2015, Quebec, Canada. A free copy of this paper can be found at: http://www.lmt.ei.tum.de/forschung/publikationen/dateien/Schroeder2015Blockstructurereusefor.pdf
+
+The software used in the paper was based on the HEVC reference software HM 16.2. Present software is based on the latest version (at this point) HM 16.7. The original README of the HM package can be found below.
+
+
+====================================================
+HOW TO
+====================================================
+
+The encoder has to be compiled twice, each time with a different preprocessor directive in the file: source/Lib/TLibCommon/TypeDef.h
+
+MULTI_RATE_WRITE_MODE has to be defined for the high-quality reference encoder. When running this encoder, a file called analysisData.bin containing the CU structure of the reference encoding will be created.
+
+MULTI_RATE_LOAD_MODE has to be defined for the lower-quality dependent encoder. When running this encoder, the (previously created) analysisData.bin file is read and the encoding is shortened according to the method proposed in the paper.
+
+
+
+====================================================
+ORIGINAL README HM 16.7
+====================================================
+
 This software package is the reference software for Rec. ITU-T H.265 | ISO/IEC 23008-2 High efficiency video coding (HEVC). The reference software includes both encoder and decoder functionality.
 
 Reference software is useful in aiding users of a video coding standard to establish and test conformance and interoperability, and to educate users and demonstrate the capabilities of the standard. For these purposes, this software is provided as an aid for the study and implementation of Rec. ITU-T H.265 | ISO/IEC 23008-2 High efficiency video coding.
@@ -5,4 +26,3 @@ Reference software is useful in aiding users of a video coding standard to estab
 The software has been jointly developed by the ITU-T Video Coding Experts Group (VCEG, Question 6 of ITU-T Study Group 16) and the ISO/IEC Moving Picture Experts Group (MPEG, Working Group 11 of Subcommittee 29 of ISO/IEC Joint Technical Committee 1).
 
 A software manual, which contains usage instructions, can be found in the "doc" subdirectory of this software package.
-
