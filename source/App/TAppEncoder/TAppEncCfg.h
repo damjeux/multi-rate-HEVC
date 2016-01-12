@@ -54,6 +54,9 @@
 class TAppEncCfg
 {
 protected:
+	// DS: Multi-rate encoding
+	Int	m_iMultiRateMode;
+
   // file I/O
   std::string m_inputFileName;                                ///< source file name
   std::string m_bitstreamFileName;                            ///< output bitstream file

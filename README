@@ -7,11 +7,20 @@ The software used in the paper was based on the HEVC reference software HM 16.2.
 HOW TO
 ====================================================
 
-The encoder has to be compiled twice, each time with a different preprocessor directive in the file: source/Lib/TLibCommon/TypeDef.h
+A new CLI option has been introduced: -mrmode
 
-MULTI_RATE_WRITE_MODE has to be defined for the high-quality reference encoder. When running this encoder, a file called analysisData.bin containing the CU structure of the reference encoding will be created.
+DEFAULT
+By default, the multi-rate encoding mode is off.
 
-MULTI_RATE_LOAD_MODE has to be defined for the lower-quality dependent encoder. When running this encoder, the (previously created) analysisData.bin file is read and the encoding is shortened according to the method proposed in the paper.
+WRITE MODE (-mrmode 1):
+When mrmode is 1, a file called analysisData.bin containing the CU structure of the present (reference) encoding will be created.
+
+LOAD MODE (-mrmode 2):
+When mrmode is 2, the (previously created) analysisData.bin file is read and the present (dependent) encoding is shortened according to the method proposed in the paper.
+
+
+example:
+./TAppEncoderStatic -c encoder_randomacess_main.cfg -mrmode 1
 
 
 

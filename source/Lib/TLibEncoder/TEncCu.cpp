@@ -735,14 +735,16 @@ Void TEncCu::xCompressCU( TComDataCU*& rpcBestCU, TComDataCU*& rpcTempCU, const 
   // DS
   Bool bSubBranch = bBoundary || !( m_pcEncCfg->getUseEarlyCU() && rpcBestCU->getTotalCost()!=MAX_DOUBLE && rpcBestCU->isSkipped(0) );
 
-#ifdef MULTI_RATE_LOAD_MODE
-  // set bSubBranch depending on loaded best depth
-  UInt bestDepth = m_puhBestDepth[rpcBestCU->getZorderIdxInCtu()];
-  if (bestDepth <= uiDepth)
+  // =============== LOAD MODE ========================================
+  if ( m_pcEncCfg->getMRmode() == 2)
   {
-	  bSubBranch = false;
+	  // set bSubBranch depending on loaded best depth
+	  UInt bestDepth = m_puhBestDepth[rpcBestCU->getZorderIdxInCtu()];
+	  if (bestDepth <= uiDepth)
+	  {
+		  bSubBranch = false;
+	  }
   }
-#endif
 
   if( bSubBranch && uiDepth < sps.getLog2DiffMaxMinCodingBlockSize() && (!getFastDeltaQp() || uiWidth > fastDeltaQPCuMaxSize || bBoundary))
   {

@@ -76,14 +76,6 @@ Void TEncSlice::create( Int iWidth, Int iHeight, ChromaFormat chromaFormat, UInt
     m_apcPicYuvResi  = new TComPicYuv;
     m_apcPicYuvResi->create( iWidth, iHeight, chromaFormat, iMaxCUWidth, iMaxCUHeight, uhTotalDepth, true );
   }
-
-  // DS: data file for analysis info
-#ifdef MULTI_RATE_WRITE_MODE
-  m_dataFile = fopen("analysisData.bin", "ab"); //WRITE mode, (append, binary)
-#endif
-#ifdef MULTI_RATE_LOAD_MODE
-  m_dataFile = fopen("analysisData.bin", "rb"); //LOAD MODE (read, binary)
-#endif
 }
 
 Void TEncSlice::destroy()
@@ -122,9 +114,10 @@ Void TEncSlice::destroy()
   }
 
   // DS: close data file for analysis info
-#if defined(MULTI_RATE_LOAD_MODE) || defined(MULTI_RATE_WRITE_MODE)
-  fclose(m_dataFile);
-#endif
+  if (m_pcCfg->getMRmode() == 1 || m_pcCfg->getMRmode() == 2)
+  {
+	  fclose(m_dataFile);
+  }
 }
 
 Void TEncSlice::init( TEncTop* pcEncTop )
@@ -155,6 +148,17 @@ Void TEncSlice::init( TEncTop* pcEncTop )
   double numCtuH = m_pcCfg->getSourceHeight() / (double)m_pcCfg->getMaxCUHeight();
   double numCtuW = m_pcCfg->getSourceWidth() / (double)m_pcCfg->getMaxCUWidth();
   m_numCTUs = (int)(ceil(numCtuH) * ceil(numCtuW));
+
+  // DS: data file for analysis info
+  Int MRmode = m_pcCfg->getMRmode();
+  if (MRmode == 1)
+  {
+	  m_dataFile = fopen("analysisData.bin", "wb"); //WRITE mode, (write, binary)
+  }
+  if (MRmode == 2)
+  {
+	  m_dataFile = fopen("analysisData.bin", "rb"); //LOAD MODE (read, binary)
+  }
 }
 
 
@@ -849,34 +853,39 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice, 
 
 	// DS: total number of parts (smallest possible partitions)
 	UInt totalNumPart = pCtu->getTotalNumPart();
+	Int MRmode = m_pcCfg->getMRmode();
 
-#ifdef MULTI_RATE_LOAD_MODE
-	UInt size_read;
-	int seek_in;
-	long seekPos;
+	// =============== LOAD MODE ========================================
+	if (MRmode == 2)
+	{
+		UInt size_read;
+		int seek_in;
+		long seekPos;
 
-	// position to read
-	seekPos = sizeof(UChar) * totalNumPart * (pCtu->getCtuRsAddr() + m_pcGOPEncoder->getTotalCoded() * m_numCTUs);
+		// position to read
+		seekPos = sizeof(UChar) * totalNumPart * (pCtu->getCtuRsAddr() + m_pcGOPEncoder->getTotalCoded() * m_numCTUs);
 
-	// get to position
-	seek_in = fseek(m_dataFile, seekPos, SEEK_SET);
+		// get to position
+		seek_in = fseek(m_dataFile, seekPos, SEEK_SET);
 
-	// read data
-	// depth
-	size_read = fread(m_pcCuEncoder->getBestDepth(), sizeof(UChar), totalNumPart, m_dataFile);
+		// read data
+		// depth
+		size_read = fread(m_pcCuEncoder->getBestDepth(), sizeof(UChar), totalNumPart, m_dataFile);
 
-	//nonsense for linux compiler:
-	//size_read = seek_in;
-	//seek_in = size_read;
-#endif
+		//nonsense for linux compiler:
+		//size_read = seek_in;
+		//seek_in = size_read;
+	}
 
     // run CTU trial encoder
     m_pcCuEncoder->compressCtu( pCtu );
 
-#ifdef MULTI_RATE_WRITE_MODE
-	// depth
-	fwrite(pCtu->getDepth(), sizeof(UChar), totalNumPart, m_dataFile);
-#endif
+	// =============== WRITE MODE ========================================
+	if (MRmode == 1)
+	{
+		// depth
+		fwrite(pCtu->getDepth(), sizeof(UChar), totalNumPart, m_dataFile);
+	}
 
 
     // All CTU decisions have now been made. Restore entropy coder to an initial stage, ready to make a true encode,

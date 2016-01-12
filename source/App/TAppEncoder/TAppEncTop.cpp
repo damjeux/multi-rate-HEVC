@@ -100,6 +100,9 @@ Void TAppEncTop::xInitLibCfg()
   m_cTEncTop.setPrintSequenceMSE                                  ( m_printSequenceMSE);
   m_cTEncTop.setCabacZeroWordPaddingEnabled                       ( m_cabacZeroWordPaddingEnabled );
 
+  // DS: multi-rate encoding
+  m_cTEncTop.setMRmode(m_iMultiRateMode);
+
   m_cTEncTop.setFrameRate                                         ( m_iFrameRate );
   m_cTEncTop.setFrameSkip                                         ( m_FrameSkip );
   m_cTEncTop.setSourceWidth                                       ( m_iSourceWidth );

@@ -654,6 +654,11 @@ Bool TAppEncCfg::parseCfg( Int argc, TChar* argv[] )
   ("help",                                            do_help,                                          false, "this help text")
   ("c",    po::parseConfigFile, "configuration file name")
   ("WarnUnknowParameter,w",                           warnUnknowParameter,                                  0, "warn for unknown configuration parameters instead of failing")
+  
+
+	  // DS: multi-rate encoding
+	  ("MR_mode,-mrmode", m_iMultiRateMode, 0, "Multi-rate mode")
+
 
   // File, I/O and source parameters
   ("InputFile,i",                                     m_inputFileName,                             string(""), "Original YUV input file name")
@@ -2501,6 +2506,13 @@ Void TAppEncCfg::xPrintParameter()
 
   printf(" SignBitHidingFlag:%d ", m_signHideFlag);
   printf("RecalQP:%d", m_recalculateQPAccordingToLambda ? 1 : 0 );
+
+  printf("\n\n");
+
+  // DS
+  if (m_iMultiRateMode == 1) printf("Multi-rate encoder: WRITE mode");
+  else if (m_iMultiRateMode == 2) printf("Multi-rate encoder: LOAD mode");
+  else printf("Multi-rate encoder: OFF");
 
   printf("\n\n");
 

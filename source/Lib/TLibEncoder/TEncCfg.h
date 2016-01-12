@@ -99,6 +99,9 @@ std::istringstream &operator>>(std::istringstream &in, GOPEntry &entry);     //i
 class TEncCfg
 {
 protected:
+	// DS: Multi-rate encoding
+	Int m_iMultiRateMode;
+
   //==== File I/O ========
   Int       m_iFrameRate;
   Int       m_FrameSkip;
@@ -409,6 +412,9 @@ public:
   Void setProfile(Profile::Name profile) { m_profile = profile; }
   Void setLevel(Level::Tier tier, Level::Name level) { m_levelTier = tier; m_level = level; }
 
+  // DS: Multi-rate encoding
+  Void      setMRmode(Int   i) { m_iMultiRateMode = i; }
+
   Void      setFrameRate                    ( Int   i )      { m_iFrameRate = i; }
   Void      setFrameSkip                    ( UInt i ) { m_FrameSkip = i; }
   Void      setSourceWidth                  ( Int   i )      { m_iSourceWidth = i; }
@@ -454,7 +460,7 @@ public:
   Void      setMaxCUWidth                   ( UInt  u )      { m_maxCUWidth  = u; }
   Void      setMaxCUHeight                  ( UInt  u )      { m_maxCUHeight = u; }
 
-  //DS
+  // DS
   UInt      getMaxCUWidth() { return m_maxCUWidth; }
   UInt      getMaxCUHeight() { return m_maxCUHeight; }
 
@@ -512,6 +518,9 @@ public:
 
   Void      setUseAdaptiveQP                ( Bool  b )      { m_bUseAdaptiveQP = b; }
   Void      setQPAdaptationRange            ( Int   i )      { m_iQPAdaptationRange = i; }
+
+  //====== DS: Multi-rate ========
+  Int       getMRmode() { return  m_iMultiRateMode; }
 
   //====== Sequence ========
   Int       getFrameRate                    ()      { return  m_iFrameRate; }
