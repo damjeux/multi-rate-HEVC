@@ -20,7 +20,10 @@ When mrmode is 2, the (previously created) analysisData.bin file is read and the
 
 
 example:
-./TAppEncoderStatic -c encoder_randomacess_main.cfg -mrmode 1
+./TAppEncoderStatic -c encoder_randomacess_main.cfg -q 22 -mrmode 1
+./TAppEncoderStatic -c encoder_randomacess_main.cfg -q 27 -mrmode 2
+./TAppEncoderStatic -c encoder_randomacess_main.cfg -q 32 -mrmode 2
+./TAppEncoderStatic -c encoder_randomacess_main.cfg -q 37 -mrmode 2
 
 
 
