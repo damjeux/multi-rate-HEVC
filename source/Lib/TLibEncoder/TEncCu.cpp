@@ -76,7 +76,9 @@ Void TEncCu::create(UChar uhTotalDepth, UInt uiMaxWidth, UInt uiMaxHeight, Chrom
   m_ppcOrigYuv     = new TComYuv*[m_uhTotalDepth-1];
 
   // DS
-  m_puhBestDepth = (UChar*)xMalloc(UChar, 256); //be careful with the 256 here (only for 64x64 CTU...). TODO
+  Int iNumPartitionsW = uiMaxWidth / 4; // number of parts in the width (4 is the size of the smallest unit)
+  Int iNumPartitions = iNumPartitionsW * iNumPartitionsW; // total number of parts (assuming width = height)
+  m_puhBestDepth = (UChar*)xMalloc(UChar, iNumPartitions);
 
   UInt uiNumPartitions;
   for( i=0 ; i<m_uhTotalDepth-1 ; i++)
