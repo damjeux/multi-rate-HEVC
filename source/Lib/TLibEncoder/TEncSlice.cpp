@@ -867,14 +867,12 @@ Void TEncSlice::compressSlice( TComPic* pcPic, const Bool bCompressEntireSlice, 
 
 		// get to position
 		seek_in = fseek(m_dataFile, seekPos, SEEK_SET);
+		if (seek_in) fputs("Seeking error", stderr);
 
 		// read data
 		// depth
 		size_read = fread(m_pcCuEncoder->getBestDepth(), sizeof(UChar), totalNumPart, m_dataFile);
-
-		//nonsense for linux compiler:
-		//size_read = seek_in;
-		//seek_in = size_read;
+		if (size_read != totalNumPart) fputs("Reading error", stderr);
 	}
 
     // run CTU trial encoder
